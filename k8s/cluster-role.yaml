@@ -1,0 +1,11 @@
+# This role has is very open and should be used with caution.
+# Gives full control over the entire cluster to the ServiceAccount.
+# Strip down to only the permissions you need.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: helm-release-cleanup-clusterrole
+rules:
+- apiGroups: [ "*" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]

@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: helm-release-cleanup-binding
+subjects:
+- kind: ServiceAccount
+  name: helm-cleanup-sa
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: helm-release-cleanup-clusterrole
+  apiGroup: rbac.authorization.k8s.io

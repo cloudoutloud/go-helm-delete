@@ -1,20 +1,25 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: helm-cleanup
+  name: helm-release-cleanup
   namespace: default
 spec:
-  schedule: "0 0 * * *" # Runs daily at midnight
+  schedule: "*/30 * * * *" # Every 30 minutes
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 3600 # 1 hour
       template:
         spec:
+          serviceAccountName: helm-cleanup-sa
           containers:
-          - name: helm
-            image: alpine/helm:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              helm list --output json | jq -r '.[] | select(.updated < now - 7*24*60*60) | .name' | xargs -I {} helm uninstall {}
+          - name: helm-release-cleanup
+            # Local image for testing, point to public/private registry if needed
+            image: helm-clean-up:v1.0.1
+            # Pull local image using kind
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: HELM_NAMESPACE
+              value: "default"
+            - name: EXEMPT_RELEASES
+              value: "external-secrets"
           restartPolicy: OnFailure
