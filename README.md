@@ -2,6 +2,10 @@
 
 Cron job to periodically check and deletes helm releases in set namespace, over a set threshold.
 
+>[!NOTE]
+This will not delete Helm releases deployed through Argocd as it uses `helm template` to install charts and not `helm install` you can not list charts depoyed through Argocd using the Helm cli.
+https://github.com/argoproj/argo-cd/issues/1672
+
 ## Environment vars
 
 `HELM_NAMESPACE` Namespace to action in.
